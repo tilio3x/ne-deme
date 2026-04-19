@@ -18,6 +18,8 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
+        testInstrumentationRunner = "com.nedeme.HiltTestRunner"
+
         // Google Maps API key from local.properties
         val mapsApiKey: String = project.findProperty("MAPS_API_KEY") as? String ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
@@ -85,4 +87,16 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.test.ext)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.hilt.testing)
+    androidTestImplementation(libs.navigation.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

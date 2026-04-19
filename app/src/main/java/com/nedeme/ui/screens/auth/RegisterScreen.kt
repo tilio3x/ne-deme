@@ -10,11 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.nedeme.data.model.UserRole
+import com.nedeme.util.TestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,13 +72,13 @@ fun RegisterScreen(
                     selected = selectedRole == UserRole.CLIENT,
                     onClick = { selectedRole = UserRole.CLIENT },
                     label = { Text("Client") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).testTag(TestTags.REGISTER_CLIENT_CHIP)
                 )
                 FilterChip(
                     selected = selectedRole == UserRole.TRADESPERSON,
                     onClick = { selectedRole = UserRole.TRADESPERSON },
                     label = { Text("Professionnel") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).testTag(TestTags.REGISTER_TRADESPERSON_CHIP)
                 )
             }
 
@@ -88,7 +90,7 @@ fun RegisterScreen(
                 label = { Text("Nom complet") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_NAME)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -102,7 +104,7 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_EMAIL)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -116,7 +118,7 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_PHONE)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -131,7 +133,7 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_PASSWORD)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -148,7 +150,7 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_CONFIRM_PASSWORD)
             )
 
             if (uiState.error != null) {
@@ -174,7 +176,7 @@ fun RegisterScreen(
                 },
                 enabled = name.isNotBlank() && email.isNotBlank() && phone.isNotBlank()
                     && password.isNotBlank() && confirmPassword.isNotBlank() && !uiState.isLoading,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier.fillMaxWidth().height(50.dp).testTag(TestTags.REGISTER_BUTTON)
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(

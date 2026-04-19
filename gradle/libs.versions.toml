@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.13.2"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
 compose-bom = "2024.12.01"
@@ -14,6 +14,11 @@ hilt-navigation-compose = "1.2.0"
 play-services-maps = "19.0.0"
 play-services-location = "21.3.0"
 maps-compose = "6.2.1"
+junit = "4.13.2"
+test-ext = "1.2.1"
+test-runner = "1.7.0-rc01"
+espresso = "3.7.0-rc01"
+hilt-testing = "2.53.1"
 
 [libraries]
 # AndroidX Core
@@ -52,6 +57,16 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+test-ext = { group = "androidx.test.ext", name = "junit", version.ref = "test-ext" }
+test-runner = { group = "androidx.test", name = "runner", version.ref = "test-runner" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt-testing" }
+navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation-compose" }
 
 # Coil (image loading)
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }

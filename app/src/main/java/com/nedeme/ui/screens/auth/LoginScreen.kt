@@ -6,10 +6,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.nedeme.util.TestTags
 
 @Composable
 fun LoginScreen(
@@ -31,7 +33,8 @@ fun LoginScreen(
         Text(
             text = "Ne Deme",
             style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.testTag(TestTags.LOGIN_TITLE)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -53,7 +56,7 @@ fun LoginScreen(
                 imeAction = ImeAction.Next
             ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.LOGIN_EMAIL)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -68,7 +71,7 @@ fun LoginScreen(
                 imeAction = ImeAction.Done
             ),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.LOGIN_PASSWORD)
         )
 
         if (uiState.error != null) {
@@ -76,7 +79,8 @@ fun LoginScreen(
             Text(
                 text = uiState.error,
                 color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.testTag(TestTags.LOGIN_ERROR)
             )
         }
 
@@ -85,7 +89,7 @@ fun LoginScreen(
         Button(
             onClick = { onLogin(email, password) },
             enabled = email.isNotBlank() && password.isNotBlank() && !uiState.isLoading,
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            modifier = Modifier.fillMaxWidth().height(50.dp).testTag(TestTags.LOGIN_BUTTON)
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(
@@ -99,7 +103,10 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = onNavigateToRegister) {
+        TextButton(
+            onClick = onNavigateToRegister,
+            modifier = Modifier.testTag(TestTags.LOGIN_REGISTER_LINK)
+        ) {
             Text("Pas de compte ? S'inscrire")
         }
     }
