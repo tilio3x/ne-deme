@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.nedeme.util.TestTags
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -39,7 +41,7 @@ fun SearchResultsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onToggleMapView) {
+                    IconButton(onClick = onToggleMapView, modifier = Modifier.testTag(TestTags.SEARCH_MAP_TOGGLE)) {
                         Icon(
                             if (uiState.showMapView) Icons.Default.List else Icons.Default.Map,
                             contentDescription = if (uiState.showMapView) "Liste" else "Carte"
@@ -74,7 +76,8 @@ fun SearchResultsScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             "Aucun professionnel disponible",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.testTag(TestTags.SEARCH_EMPTY)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(

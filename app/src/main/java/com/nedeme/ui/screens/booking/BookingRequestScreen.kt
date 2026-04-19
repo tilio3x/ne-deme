@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.nedeme.util.TestTags
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -74,7 +76,8 @@ fun BookingRequestScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         "Demande envoyée !",
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.testTag(TestTags.BOOKING_SUCCESS)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -107,7 +110,7 @@ fun BookingRequestScreen(
                     onValueChange = { description = it },
                     label = { Text("Décrivez votre besoin") },
                     placeholder = { Text("Ex: Fuite d'eau dans la cuisine...") },
-                    modifier = Modifier.fillMaxWidth().height(160.dp),
+                    modifier = Modifier.fillMaxWidth().height(160.dp).testTag(TestTags.BOOKING_DESCRIPTION),
                     maxLines = 6
                 )
 
@@ -144,7 +147,7 @@ fun BookingRequestScreen(
                 Button(
                     onClick = { onSubmit(description, selectedDate) },
                     enabled = description.isNotBlank() && !uiState.isLoading,
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
+                    modifier = Modifier.fillMaxWidth().height(50.dp).testTag(TestTags.BOOKING_SUBMIT)
                 ) {
                     if (uiState.isLoading) {
                         CircularProgressIndicator(

@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.nedeme.util.TestTags
 import com.nedeme.data.model.BookingRequest
 import com.nedeme.ui.theme.Success
 
@@ -41,7 +43,8 @@ fun TradespersonDashboardScreen(
                             Spacer(modifier = Modifier.width(4.dp))
                             Switch(
                                 checked = tp.isAvailable,
-                                onCheckedChange = { onToggleAvailability() }
+                                onCheckedChange = { onToggleAvailability() },
+                                modifier = Modifier.testTag(TestTags.DASHBOARD_AVAILABILITY_TOGGLE)
                             )
                         }
                     }
@@ -54,12 +57,14 @@ fun TradespersonDashboardScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    text = { Text("En attente (${uiState.pendingBookings.size})") }
+                    text = { Text("En attente (${uiState.pendingBookings.size})") },
+                    modifier = Modifier.testTag(TestTags.DASHBOARD_PENDING_TAB)
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text("Acceptés (${uiState.acceptedBookings.size})") }
+                    text = { Text("Acceptés (${uiState.acceptedBookings.size})") },
+                    modifier = Modifier.testTag(TestTags.DASHBOARD_ACCEPTED_TAB)
                 )
             }
 
