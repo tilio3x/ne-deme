@@ -11,6 +11,9 @@ core-ktx = "1.15.0"
 activity-compose = "1.9.3"
 coil = "2.7.0"
 hilt-navigation-compose = "1.2.0"
+play-services-maps = "19.0.0"
+play-services-location = "21.3.0"
+maps-compose = "6.2.1"
 
 [libraries]
 # AndroidX Core
@@ -44,6 +47,11 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+
+# Google Maps & Location
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
 
 # Coil (image loading)
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }

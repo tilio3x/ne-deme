@@ -32,6 +32,7 @@
 | Auth | Firebase Authentication | Email/password login and registration |
 | Database | Cloud Firestore | NoSQL document database, real-time listeners |
 | Notifications | Firebase Cloud Messaging + Cloud Functions | Push notifications on booking creation |
+| Maps | Google Maps Compose + Play Services Location | Map view, location picker, distance calculations |
 | Image Loading | Coil | Async image loading for profile photos |
 
 ### Two User Roles
@@ -80,11 +81,18 @@ graph TB
         Functions[Cloud Functions]
     end
 
+    subgraph Google["Google Services"]
+        Maps[Google Maps SDK]
+        Location[Fused Location Provider]
+    end
+
     UI --> VM
     VM --> Repo
     Repo --> Firebase
     Functions -->|onBookingCreated| FCM
     FCM -.->|Push Notification| UI
+    UI --> Maps
+    UI --> Location
 ```
 
 ### Layer Responsibilities
@@ -559,4 +567,5 @@ Track architectural changes here. Add new entries at the top.
 
 | Date | Change | Reason |
 |------|--------|--------|
+| 2026-04-19 | Google Maps integration | Added map view on search results, location-based search with radius filtering, location picker for tradesperson setup, distance display on cards. New dependencies: Maps Compose, Play Services Maps/Location. New utility: `LocationHelper.kt`. |
 | 2026-04-19 | Initial architecture | Greenfield MVP build — Kotlin + Compose + Firebase |

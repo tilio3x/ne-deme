@@ -5,7 +5,9 @@ import com.google.firebase.firestore.Query
 import com.nedeme.data.model.Review
 import com.nedeme.data.model.ServiceCategory
 import com.nedeme.data.model.Tradesperson
+import com.google.firebase.firestore.GeoPoint
 import com.nedeme.util.Constants
+import com.nedeme.util.LocationHelper
 import com.nedeme.util.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +33,11 @@ class TradespersonRepository @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    fun searchByCategory(category: String): Flow<Resource<List<Tradesperson>>> = callbackFlow {
+    fun searchByCategory(
+        category: String,
+        userLocation: GeoPoint? = null,
+        radiusKm: Double = 50.0
+    ): Flow<Resource<List<Tradesperson>>> = callbackFlow {
         trySend(Resource.Loading)
         val listener = firestore.collection(Constants.TRADESPEOPLE_COLLECTION)
             .whereArrayContains("categories", category)
@@ -43,7 +49,17 @@ class TradespersonRepository @Inject constructor(
                     trySend(Resource.Error(error.message ?: "Search failed"))
                     return@addSnapshotListener
                 }
-                val list = snapshot?.toObjects(Tradesperson::class.java) ?: emptyList()
+                var list = snapshot?.toObjects(Tradesperson::class.java) ?: emptyList()
+
+                // Filter by distance if user location is available
+                if (userLocation != null) {
+                    list = list.filter { tp ->
+                        tp.location?.let {
+                            LocationHelper.distanceInKm(userLocation, it) <= radiusKm
+                        } ?: true // Include tradespeople without location set
+                    }
+                }
+
                 trySend(Resource.Success(list))
             }
         awaitClose { listener.remove() }

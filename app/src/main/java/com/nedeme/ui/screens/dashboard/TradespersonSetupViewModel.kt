@@ -1,6 +1,7 @@
 package com.nedeme.ui.screens.dashboard
 
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.GeoPoint
 import com.nedeme.data.model.Tradesperson
 import com.nedeme.data.repository.AuthRepository
 import com.nedeme.data.repository.TradespersonRepository
@@ -19,6 +20,7 @@ class TradespersonSetupViewModel @Inject constructor(
         description: String,
         city: String,
         hourlyRate: Double?,
+        location: GeoPoint? = null,
         onResult: (Boolean) -> Unit
     ) {
         val user = authRepository.currentUser ?: run {
@@ -39,7 +41,8 @@ class TradespersonSetupViewModel @Inject constructor(
             description = description,
             city = city,
             hourlyRate = hourlyRate,
-            phone = userData.data.phone
+            phone = userData.data.phone,
+            location = location
         )
 
         when (tradespersonRepository.createOrUpdateProfile(tradesperson)) {

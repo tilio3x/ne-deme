@@ -4,14 +4,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.nedeme.data.model.Tradesperson
-import com.nedeme.util.Resource
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.nedeme.util.LocationHelper
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -26,6 +37,8 @@ fun TradespersonSetupScreen(
     var selectedCategories by remember { mutableStateOf(setOf<String>()) }
     var isLoading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    var selectedLocation by remember { mutableStateOf<GeoPoint?>(null) }
+    var showLocationPicker by remember { mutableStateOf(false) }
 
     val categories = listOf(
         "plumbing" to "Plomberie",
@@ -39,6 +52,19 @@ fun TradespersonSetupScreen(
     )
 
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    // Location picker dialog
+    if (showLocationPicker) {
+        LocationPickerDialog(
+            initialLocation = selectedLocation,
+            onLocationSelected = { location ->
+                selectedLocation = location
+                showLocationPicker = false
+            },
+            onDismiss = { showLocationPicker = false }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -97,6 +123,53 @@ fun TradespersonSetupScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Location picker
+            Text("Localisation", style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
+                    onClick = { showLocationPicker = true },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(Icons.Default.LocationOn, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        if (selectedLocation != null) "Modifier la position"
+                        else "Choisir sur la carte"
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        scope.launch {
+                            val loc = LocationHelper.getCurrentLocation(context)
+                            if (loc != null) {
+                                selectedLocation = loc
+                            } else {
+                                error = "Impossible d'obtenir votre position. Vérifiez les permissions."
+                            }
+                        }
+                    }
+                ) {
+                    Icon(Icons.Default.MyLocation, contentDescription = "Ma position")
+                }
+            }
+
+            if (selectedLocation != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    "Position définie: %.4f, %.4f".format(
+                        selectedLocation!!.latitude,
+                        selectedLocation!!.longitude
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             OutlinedTextField(
                 value = hourlyRate,
                 onValueChange = { hourlyRate = it },
@@ -129,7 +202,8 @@ fun TradespersonSetupScreen(
                             categories = selectedCategories.toList(),
                             description = description,
                             city = city,
-                            hourlyRate = hourlyRate.toDoubleOrNull()
+                            hourlyRate = hourlyRate.toDoubleOrNull(),
+                            location = selectedLocation
                         ) { success ->
                             isLoading = false
                             if (success) onSetupComplete()
@@ -153,4 +227,67 @@ fun TradespersonSetupScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
+}
+
+@Composable
+private fun LocationPickerDialog(
+    initialLocation: GeoPoint?,
+    onLocationSelected: (GeoPoint) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var markerPosition by remember {
+        mutableStateOf(
+            initialLocation?.let { LatLng(it.latitude, it.longitude) }
+                ?: LatLng(12.6392, -8.0029) // Bamako default
+        )
+    }
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(markerPosition, 13f)
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Choisir votre emplacement") },
+        text = {
+            Column {
+                Text(
+                    "Appuyez sur la carte pour placer votre position",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                ) {
+                    GoogleMap(
+                        modifier = Modifier.fillMaxSize(),
+                        cameraPositionState = cameraPositionState,
+                        onMapClick = { latLng ->
+                            markerPosition = latLng
+                        }
+                    ) {
+                        Marker(
+                            state = MarkerState(position = markerPosition),
+                            title = "Votre position"
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                onLocationSelected(GeoPoint(markerPosition.latitude, markerPosition.longitude))
+            }) {
+                Text("Confirmer")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Annuler")
+            }
+        }
+    )
 }

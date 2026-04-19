@@ -2,6 +2,7 @@ package com.nedeme.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
@@ -20,7 +21,8 @@ import com.nedeme.ui.theme.FeaturedGold
 fun TradespersonCard(
     tradesperson: Tradesperson,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    distanceKm: Double? = null
 ) {
     Card(
         onClick = onClick,
@@ -77,11 +79,24 @@ fun TradespersonCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                Text(
-                    text = tradesperson.city,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.LocationOn,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = if (distanceKm != null) {
+                            "${com.nedeme.util.LocationHelper.formatDistance(distanceKm)} - ${tradesperson.city}"
+                        } else {
+                            tradesperson.city
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 

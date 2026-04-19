@@ -156,6 +156,7 @@ fun NeDemeNavGraph() {
                     onTradespersonClick = { id ->
                         navController.navigate(Screen.TradespersonProfile.createRoute(id))
                     },
+                    onToggleMapView = viewModel::toggleMapView,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
