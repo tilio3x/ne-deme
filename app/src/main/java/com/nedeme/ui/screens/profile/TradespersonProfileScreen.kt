@@ -106,7 +106,7 @@ fun TradespersonProfileScreen(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Default.Star, tint = FeaturedGold, modifier = Modifier.size(20.dp))
+                                Icon(Icons.Default.Star, contentDescription = null, tint = FeaturedGold, modifier = Modifier.size(20.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text("%.1f".format(tp.averageRating), style = MaterialTheme.typography.titleMedium)
                                 Text(
